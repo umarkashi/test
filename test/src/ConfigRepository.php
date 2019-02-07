@@ -9,8 +9,9 @@ class ConfigRepository
      */
     public function __construct()
     {
-       
+        $this->key = $key;
     }
+	
 
     /**
      * Determine whether the config array contains the given key
@@ -20,7 +21,7 @@ class ConfigRepository
      */
     public function has($key)
     {
-        
+      return Arr::has($this->items, $key);
     }
 
     /**
@@ -32,7 +33,10 @@ class ConfigRepository
      */
     public function set($key, $value)
     {
-        
+              $keys = is_array($key) ? $key : [$key => $value];
+        foreach ($keys as $key => $value) {
+            Arr::set($this->items, $key, $value);
+        }
     }
 
     /**
@@ -47,7 +51,10 @@ class ConfigRepository
      */
     public function get($key, $default = null)
     {
-
+			if (is_array($key)) {
+            return $this->getMany($key);
+        }
+			return Arr::get($this->items, $key, $default);
     }
 
     /**
@@ -58,7 +65,14 @@ class ConfigRepository
      */
     public function remove($key)
     {
+ $files = $array;
+    foreach( $files $key => $value )
+    {
+        if (strpos($value, $todelete ) !== false)   
+           unset( $array[ $key ] );     //$array[$key] = str_replace($toDelete, $replaceWith, $value) ;  // add one more argument $replaceWith to function 
 
+    }
+    return $array;
     }
 
     /**
@@ -72,6 +86,10 @@ class ConfigRepository
      */
     public function load($files)
     {
-
+  $this->file = $files;
+        if ($this->handle = fopen($files, 'c+'))
+        {
+            return $this;
+        }
     }
 }
